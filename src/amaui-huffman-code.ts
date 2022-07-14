@@ -1,5 +1,12 @@
-import { is, isValid, merge, copy, to, binaryStringToHexadecimal, hexadecimalStringToBinary } from '@amaui/utils';
-import { AmauiDate, duration } from '@amaui/date';
+import is from '@amaui/utils/is';
+import isValid from '@amaui/utils/isValid';
+import merge from '@amaui/utils/merge';
+import copy from '@amaui/utils/copy';
+import to from '@amaui/utils/to';
+import binaryStringToHexadecimal from '@amaui/utils/binaryStringToHexadecimal';
+import hexadecimalStringToBinary from '@amaui/utils/hexadecimalStringToBinary';
+import AmauiDate from '@amaui/date/amaui-date';
+import duration from '@amaui/date/duration';
 import { TMethod } from '@amaui/models';
 
 export type TArrayVariant = 'preorder';

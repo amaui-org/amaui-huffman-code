@@ -1,3 +1,1 @@
-import { default as AmauiHuffmanCode } from './amaui-huffman-code';
-
-export default AmauiHuffmanCode;
+export { default } from './amaui-huffman-code';
