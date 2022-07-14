@@ -132,7 +132,7 @@ async function makePackage() {
   cache['package'] = newPackage;
 
   if (log) console.log(`🌱 Main package.json added to build`);
-};
+}
 
 const capitalize = value => `${value[0].toUpperCase()}${value.slice(1).toLowerCase()}`;
 
@@ -171,14 +171,14 @@ async function addLicense() {
   );
 
   if (log) console.log(`🌱 Appended LICENSE to important build files`);
-};
+}
 
 async function moveFile(value) {
   const source = path.resolve(wd, value);
   const target = path.resolve(to, path.basename(value));
 
   await fse.copy(source, target);
-};
+}
 
 async function moveFiles() {
   const { log } = cache;
@@ -191,7 +191,7 @@ async function moveFiles() {
   if (log) console.log(`🌱 Adding ${toAddFiles.join(', ')} files to build\n`);
 
   await Promise.all(toAddFiles.map(value => moveFile(value)));
-};
+}
 
 async function move() {
   const { log } = cache;
