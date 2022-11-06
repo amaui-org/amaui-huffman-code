@@ -52,7 +52,7 @@ async function buildBabel(variant = 'esm') {
   const [error, response] = await exec(cmd, { env: { ...process.env, ...env } });
 
   if (error) {
-    console.error('Build babel error: \n' + response, '\n\n');
+    console.error('Build babel error: \n' + error + response, '\n\n');
 
     throw new Error();
   }
