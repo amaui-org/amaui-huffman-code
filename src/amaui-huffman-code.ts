@@ -39,8 +39,8 @@ export class AmauiHuffmanCodeResponse {
     public compression_percentage?: number,
     public positive?: boolean,
     public average_code_word_length?: number,
-    public encode_execution_milliseconds?: number,
-    public encode_execution?: string
+    public execution_milliseconds?: number,
+    public execution?: string
   ) { }
 
 }
@@ -438,8 +438,8 @@ class AmauiHuffmanCode {
       if (this.options.base64) value = AmauiHuffmanCode.encodeBase64(value);
 
       response.value = value;
-      response.encode_execution_milliseconds = AmauiDate.milliseconds - this.startTime;
-      response.encode_execution = duration(response.encode_execution_milliseconds) || '0 milliseconds';
+      response.execution_milliseconds = AmauiDate.milliseconds - this.startTime;
+      response.execution = duration(response.execution_milliseconds) || '0 milliseconds';
       response.values = this.values;
       response.values_encoded = AmauiHuffmanCode.encodeValues(this.huffmanTree);
       response.probabilities = this.probabilities;
@@ -487,10 +487,10 @@ class AmauiHuffmanCode {
       }
 
       response.value = output;
-      response.encode_execution_milliseconds = AmauiDate.milliseconds - startTime;
-      response.encode_execution = duration(response.encode_execution_milliseconds) || '0 milliseconds';
-      response.original_byte_size = value.length;
-      response.value_byte_size = response.value.length;
+      response.execution_milliseconds = AmauiDate.milliseconds - startTime;
+      response.execution = duration(response.execution_milliseconds) || '0 milliseconds';
+      response.original_byte_size = to(output, 'byte-size') as number;
+      response.value_byte_size = to(value_, 'byte-size') as number;
     }
 
     return response;
