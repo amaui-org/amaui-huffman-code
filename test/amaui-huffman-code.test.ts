@@ -70,8 +70,8 @@ group('@amaui/huffman-code', () => {
       compression_percentage: 40.4,
       positive: true,
       average_code_word_length: 4.04,
-      execution_milliseconds: 1.04,
-      execution: '1 milliseconds',
+      performance_milliseconds: 1.04,
+      performance: '1 milliseconds',
     }));
   });
 

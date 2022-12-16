@@ -39,8 +39,8 @@ export class AmauiHuffmanCodeResponse {
     public compression_percentage?: number,
     public positive?: boolean,
     public average_code_word_length?: number,
-    public execution_milliseconds?: number,
-    public execution?: string
+    public performance_milliseconds?: number,
+    public performance?: string
   ) { }
 
 }
@@ -438,8 +438,8 @@ class AmauiHuffmanCode {
       if (this.options.base64) value = AmauiHuffmanCode.encodeBase64(value);
 
       response.value = value;
-      response.execution_milliseconds = AmauiDate.milliseconds - this.startTime;
-      response.execution = duration(response.execution_milliseconds) || '0 milliseconds';
+      response.performance_milliseconds = AmauiDate.milliseconds - this.startTime;
+      response.performance = duration(response.performance_milliseconds) || '0 milliseconds';
       response.values = this.values;
       response.values_encoded = AmauiHuffmanCode.encodeValues(this.huffmanTree);
       response.probabilities = this.probabilities;
@@ -487,8 +487,8 @@ class AmauiHuffmanCode {
       }
 
       response.value = output;
-      response.execution_milliseconds = AmauiDate.milliseconds - startTime;
-      response.execution = duration(response.execution_milliseconds) || '0 milliseconds';
+      response.performance_milliseconds = AmauiDate.milliseconds - startTime;
+      response.performance = duration(response.performance_milliseconds) || '0 milliseconds';
       response.original_byte_size = to(output, 'byte-size') as number;
       response.value_byte_size = to(value_, 'byte-size') as number;
     }

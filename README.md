@@ -19,7 +19,7 @@
 <h3 align='center'>
   <sub>MIT license&nbsp;&nbsp;&nbsp;&nbsp;</sub>
   <sub>Production ready&nbsp;&nbsp;&nbsp;&nbsp;</sub>
-  <sub>UMD 11.7kb gzipped&nbsp;&nbsp;&nbsp;&nbsp;</sub>
+  <sub>UMD 11.9kb gzipped&nbsp;&nbsp;&nbsp;&nbsp;</sub>
   <sub>100% test cov&nbsp;&nbsp;&nbsp;&nbsp;</sub>
   <sub>Browser and Nodejs</sub>
 </h3>
@@ -148,8 +148,8 @@
   //   "compression_percentage": 7.3,
   //   "positive": true,
   //   "average_code_word_length": 4.175,
-  //   "execution_milliseconds": 4,
-  //   "execution": "4 milliseconds"
+  //   "performance_milliseconds": 4,
+  //   "performance": "4 milliseconds"
   // }
 
   // Decode
@@ -160,8 +160,8 @@
   //   "value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce dolor sem, facilisis sed erat sit amet, pharetra blandit augue. Sed id placerat felis, malesuada rutrum nisl. In ultrices sed mauris finibus malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer cursus, odio id rutrum blandit, neque velit aliquam odio, at rhoncus elit est nec erat. Proin egestas mauris elit, sit amet molestie nisi semper at. Cras interdum massa nec molestie rutrum. Duis commodo venenatis justo, ac porta tellus pellentesque sed. Donec et nisi metus.",
   //   "original_byte_size": 589,
   //   "value_byte_size": 444,
-  //   "execution_milliseconds": 7,
-  //   "execution": "7 milliseconds"
+  //   "performance_milliseconds": 7,
+  //   "performance": "7 milliseconds"
   // }
 ```
 
