@@ -209,6 +209,8 @@ class AmauiHuffmanCode {
 
     const value = value_.split('').map(item => item.charCodeAt(0).toString(16)).join('');
 
+    // It can make a mistake not being correct on the last character with amount of padded 0s
+    // ie. 0011 instead of 00011
     return hexadecimalStringToBinary(value);
   }
 
@@ -471,19 +473,25 @@ class AmauiHuffmanCode {
     const value = AmauiHuffmanCode.decodeValue(AmauiHuffmanCode.decodeBase64(value_));
 
     if (is('string', value) && Object.keys(this.values).length) {
+      let input = value;
       let output = '';
-      let word = '';
 
-      for (let i = 0; i < value.length; i++) {
-        word += value[i];
+      while (input.length) {
+        let valueWord = Object.keys(this.values).find(key => input.indexOf(this.values[key]) === 0);
 
-        const valueWord = Object.keys(this.values).find(key => this.values[key] === word);
+        if (!valueWord) {
+          // bug
+          valueWord = (
+            Object.keys(this.values).find(key => ('0' + input).indexOf(this.values[key]) === 0) ||
+            Object.keys(this.values).find(key => ('00' + input).indexOf(this.values[key]) === 0)
+          );
 
-        if (valueWord) {
-          output += valueWord;
-
-          word = '';
+          if (!valueWord) break;
         }
+
+        output += valueWord;
+
+        input = input.slice(this.values[valueWord].length);
       }
 
       response.value = output;

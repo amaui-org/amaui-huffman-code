@@ -1155,4 +1155,28 @@ group('@amaui/huffman-code', () => {
 
   });
 
+  group('Use cases', () => {
+
+    to('Bug with incorrectly decoded last character having 0011 instead of 00011, when converted back to binary', async () => {
+
+      const valueBrowsers = await evaluate((window: any) => {
+        const amauiHuffmanCode = new window.AmauiHuffmanCode(' {"id":"a","name":"è¿\x99æ\x98¯ä¸\x80å\x8F¥ä¸­æ\x96\x87"}');
+
+        return [
+          amauiHuffmanCode.decode(amauiHuffmanCode.response.value).value
+        ];
+      }); const amauiHuffmanCode = new AmauiHuffmanCode(' {"id":"a","name":"è¿\x99æ\x98¯ä¸\x80å\x8F¥ä¸­æ\x96\x87"}');
+
+      const valueNode = [
+        amauiHuffmanCode.decode(amauiHuffmanCode.response.value).value
+      ];
+      const values = [valueNode, ...valueBrowsers];
+
+      values.forEach(value => assert(value).eql([
+        ` {\"id\":\"a\",\"name\":\"è¿æ¯ä¸å¥ä¸­æ\"}`
+      ]));
+    });
+
+  });
+
 });
