@@ -197,7 +197,10 @@ class AmauiHuffmanCode {
   public static encodeValue(value: string): string {
     if (!(is('string', value) && value.length)) return '';
 
-    return binaryStringToHexadecimal(value).match(/.{1,2}/g).flatMap(item => {
+    // Add 1 at the start of every 3 characters
+    // it's more data, but there will be no bugs
+    // with padded 0s, a bug fix for now
+    return binaryStringToHexadecimal((value.match(/.{1,3}/g) || []).map(item => 1 + item).join('')).match(/.{1,2}/g).flatMap(item => {
       if (item[0] === '0') return item.split('').map(item_ => String.fromCharCode(parseInt(item_, 16)));
 
       return String.fromCharCode(parseInt(item, 16));
@@ -209,9 +212,7 @@ class AmauiHuffmanCode {
 
     const value = value_.split('').map(item => item.charCodeAt(0).toString(16)).join('');
 
-    // It can make a mistake not being correct on the last character with amount of padded 0s
-    // ie. 0011 instead of 00011
-    return hexadecimalStringToBinary(value);
+    return (hexadecimalStringToBinary(value).match(/.{1,4}/g) || []).map(item => item.slice(1)).join('');
   }
 
   public static encodeValuesValue(value_: string): string | object {
