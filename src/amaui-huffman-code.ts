@@ -215,116 +215,35 @@ class AmauiHuffmanCode {
     return (hexadecimalStringToBinary(value).match(/.{1,4}/g) || []).map(item => item.slice(1)).join('');
   }
 
-  public static encodeValuesValue(value_: string): string | object {
-    if (isValid('binary-string', value_)) {
-      const zeros = (value_.match(/^0+/) || [])[0] || '';
-      const other = (value_.match(/(?!^0*)?[^0].*/) || [])[0];
+  public static encodeValues(values: Record<string, string>): string | object {
+    if (values) {
+      let result = '';
 
-      return zeros + (other ? parseInt(other, 2).toString(36) : '');
+      const keys = Object.keys(values);
+
+      keys.forEach((item, index) => result += `${item}${this.encodeValue(values[item])}${index < keys.length - 1 ? ' ' : ''}`);
+
+      return result;
     }
   }
 
-  public static decodeValuesValue(value_: string): string {
-    if (is('string', value_)) {
-      const zeros = (value_.match(/^0+/) || [])[0] || '';
-      const other = (value_.match(/(?!^0*)?[^0].*/) || [])[0];
+  public static decodeValues(value: string): object {
+    const result = {};
 
-      return zeros + (other ? parseInt(other, 36).toString(2) : '');
-    }
-  }
+    const values = [];
 
-  public static encodeValues(amauiHuffmanTree: AmauiHuffmanTree): string | object {
-    if (amauiHuffmanTree) {
-      const values = [];
-      const newValues = [];
-      let arrayPart = [];
+    if (value) {
+      const values_ = value.split(' ');
 
-      function toArray(object: IAmauiNode, index = 0) {
-        if (object.path) values.push(object.word ? `w${object.word}` : object.path?.slice(-1));
-
-        if (object.left) toArray(object.left, 2 * index + 1);
-        if (object.right) toArray(object.right, 2 * index + 2);
-      }
-
-      toArray(amauiHuffmanTree.root);
-
-      const firstItemValue = values[0]?.indexOf('w') > -1;
-
-      values.forEach((item, index) => {
-        if (item.indexOf('w') === 0) {
-          if (index > 0 && ['0', '1'].indexOf(values[index - 1]) > -1 && arrayPart.length) {
-            newValues.push(this.encodeValuesValue(arrayPart.join('')));
-
-            arrayPart = [];
-          }
-
-          arrayPart.push(item.slice(1));
-        }
-        else {
-          if (index > 0 && values[index - 1].indexOf('w') === 0 && arrayPart.length) {
-            newValues.push(arrayPart.join(''));
-
-            arrayPart = [];
-          }
-
-          arrayPart.push(item);
-        }
-
-        if (index === values.length - 1 && arrayPart.length) newValues.push(arrayPart.join(''));
+      values_.forEach((item, index) => {
+        if (!item) values_[index + 1] = ` ${values_[index + 1]}`;
+        else values.push(item);
       });
 
-      return (firstItemValue ? 1 : 0) + newValues.filter(Boolean).join(' ');
-    }
-  }
-
-  public static decodeValues(value_: string): object {
-    const firstItemValue = value_[0] === '1';
-
-    const value: any = value_.substring(1);
-
-    if (value.length) {
-      let items = value === ' ' ? [' '] : value.split(/(?!^) (?!$)/).filter(Boolean);
-
-      const onlySpace = value.indexOf('   ');
-
-      if (onlySpace > -1) {
-        const onlySpaceIndex = value.substring(0, onlySpace).split(/(?!^) (?!$)/).filter(Boolean).length;
-
-        items.splice(onlySpaceIndex, 0, ' ');
-      }
-
-      const multiSpace = value.match(/(?!^| +)[^ ]+  [^ ]+/);
-
-      if (multiSpace) {
-        const [first, following] = multiSpace[0].split('  ');
-
-        const firstIndex = items.reduce((result, item, index) => {
-          if (item === first && items[index + 1] === following) result = index;
-
-          return result;
-        }, 0);
-        const followingIndex = firstIndex + 1;
-
-        const wordIndex = (firstItemValue && !(followingIndex % 2)) || (!firstItemValue && followingIndex % 2) ? followingIndex : firstIndex;
-
-        if (wordIndex === firstIndex) items[wordIndex] += ' ';
-        else items[wordIndex] = ' ' + items[wordIndex];
-      }
-
-      items = items.flatMap((item, index) => {
-        let newItem: any = item;
-
-        if (firstItemValue ? !(index % 2) : index % 2) return [newItem.split('')];
-
-        newItem = this.decodeValuesValue(newItem);
-
-        return newItem.split('');
-      });
-
-      return AmauiHuffmanCode.getValues(AmauiHuffmanTree.make(items));
+      values.forEach(item => result[item[0]] = this.decodeValue(item.slice(1)));
     }
 
-    return {};
+    return result;
   }
 
   public static getValues(amauiHuffmanTree: AmauiHuffmanTree): Record<string, string> {
@@ -444,7 +363,7 @@ class AmauiHuffmanCode {
       response.performance_milliseconds = AmauiDate.milliseconds - this.startTime;
       response.performance = duration(response.performance_milliseconds) || '0 milliseconds';
       response.values = this.values;
-      response.values_encoded = AmauiHuffmanCode.encodeValues(this.huffmanTree);
+      response.values_encoded = AmauiHuffmanCode.encodeValues(this.values);
       response.probabilities = this.probabilities;
       response.efficiency = this.efficiency;
       response.redundency = this.redundency;

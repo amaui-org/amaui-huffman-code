@@ -391,221 +391,165 @@ group('@amaui/huffman-code', () => {
         ]));
       });
 
-      to('encodeValuesValue', async () => {
-        const valueBrowsers = await evaluate((window: any) => {
-          return [
-            window.AmauiHuffmanCode.encodeValuesValue(''),
-            window.AmauiHuffmanCode.encodeValuesValue([]),
-            window.AmauiHuffmanCode.encodeValuesValue('1'),
-            window.AmauiHuffmanCode.encodeValuesValue('0'),
-            window.AmauiHuffmanCode.encodeValuesValue('1010'),
-            window.AmauiHuffmanCode.encodeValuesValue('1111011101011000110'),
-          ];
-        });
-        const valueNode = [
-          AmauiHuffmanCode.encodeValuesValue(''),
-          AmauiHuffmanCode.encodeValuesValue([] as any),
-          AmauiHuffmanCode.encodeValuesValue('1'),
-          AmauiHuffmanCode.encodeValuesValue('0'),
-          AmauiHuffmanCode.encodeValuesValue('1010'),
-          AmauiHuffmanCode.encodeValuesValue('1111011101011000110'),
-        ];
-        const values = [valueNode, ...valueBrowsers];
-
-        values.forEach(value => assert(value).eql([
-          '',
-          undefined,
-          '1',
-          '0',
-          'a',
-          'auva',
-        ]));
-      });
-
-      to('decodeValuesValue', async () => {
-        const valueBrowsers = await evaluate((window: any) => {
-          return [
-            window.AmauiHuffmanCode.decodeValuesValue(''),
-            window.AmauiHuffmanCode.decodeValuesValue(undefined),
-            window.AmauiHuffmanCode.decodeValuesValue('1'),
-            window.AmauiHuffmanCode.decodeValuesValue('0'),
-            window.AmauiHuffmanCode.decodeValuesValue('a'),
-            window.AmauiHuffmanCode.decodeValuesValue('auva'),
-          ];
-        });
-        const valueNode = [
-          AmauiHuffmanCode.decodeValuesValue(''),
-          AmauiHuffmanCode.decodeValuesValue(undefined as any),
-          AmauiHuffmanCode.decodeValuesValue('1'),
-          AmauiHuffmanCode.decodeValuesValue('0'),
-          AmauiHuffmanCode.decodeValuesValue('a'),
-          AmauiHuffmanCode.decodeValuesValue('auva'),
-        ];
-        const values = [valueNode, ...valueBrowsers];
-
-        values.forEach(value => assert(value).eql([
-          '',
-          undefined,
-          '1',
-          '0',
-          '1010',
-          '1111011101011000110',
-        ]));
-      });
-
       to('encodeValues', async () => {
         const valueBrowsers = await evaluate((window: any) => {
-          return [
-            window.AmauiHuffmanCode.encodeValues(new window.AmauiHuffmanCode.AmauiHuffmanTree().make([])),
-            window.AmauiHuffmanCode.encodeValues(new window.AmauiHuffmanCode.AmauiHuffmanTree().make([
-              [' '],
-            ])),
-            window.AmauiHuffmanCode.encodeValues(new window.AmauiHuffmanCode.AmauiHuffmanTree().make([
-              ['a'],
-            ])),
-            window.AmauiHuffmanCode.encodeValues(new window.AmauiHuffmanCode.AmauiHuffmanTree().make([
-              '0', '0', ['e'], '1', ['o', 'n'], '1', '0', ['u'], '1', ['d', 'c'], '1', ['r'], '1', '0', '0', ['g', 'b'], '1', ['1'], '1', ['v', 'D'], '1', '0', ['h'], '1', ['I', 'C'], '1', ['f'], '1', ['P', 'j'], '1', '0', '0', ['i', 't'], '1', ['s'], '1', ['l', 'm'], '1', [' '], '1', ['a'], '1', '0', ['p', '.'], '1', [','], '1', ['q'], '1', '0', ['0', 'L'], '1', ['F', 'S'],
-            ])),
-            window.AmauiHuffmanCode.encodeValues(new window.AmauiHuffmanCode.AmauiHuffmanTree().make(['0', '0', '0', ['t', 'u'], '1', ['i'], '1', ['o'], '1', ['.'], '1', ['q'], '1', ['f'], '1', ['\n'], '1', ['Q', 'x'], '1', [' '], '1', ['s'], '1', ['c'], '1', ['p'], '1', '0', '0', ['P', 'V'], '1', ['I', 'S'], '1', '0', ['M'], '1', ['F', 'E'], '1', '0', ['C', 'U'], '1', ['D', 'A'], '1', '0', ['e'], '1', ['r', 'n'], '1', '0', ['l'], '1', ['d'], '1', ['g', ','], '1', ['a'], '1', ['m'], '1', ['v'], '1', ['b'], '1', ['h'], '1', ['N'], '1', ['j', 'L']
-            ])),
+          const values_ = [
+            '',
+            '4',
+            ' ',
+            '  ',
+            'a',
+            'Lorem 11101 ipsum dolor sit amet, consectetur adipiscing elit. Fusce dolor sem, facilisis sed erat sit amet, pharetra blandit augue. Sed id placerat felis, malesuada rutrum nisl. In ultrices sed mauris finibus malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer cursus, odio id rutrum blandit, neque velit aliquam odio, at rhoncus elit est nec erat. Proin egestas mauris elit, sit amet molestie nisi semper at. Cras interdum massa nec molestie rutrum. Duis commodo venenatis justo, ac porta tellus pellentesque sed. Donec et nisi aumus.',
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tincidunt justo sit amet mi ornare volutpat. Praesent consequat mauris id massa vehicula, ac molestie dolor tincidunt. Fusce neque dolor, commodo nec justo nec, commodo euismod erat. Vivamus at tincidunt massa, nec tempor ante. In suscipit nisl nec faucibus gravida. In non commodo erat, eu luctus ligula. Sed purus justo, congue in congue eget, placerat scelerisque velit. Sed vel arcu risus. Vivamus auctor quis erat a porta.\n\nMauris vel dui at lectus tincidunt finibus id ut massa. Phasellus in velit elit. Etiam eu dapibus lorem. Maecenas at tincidunt urna. Cras vulputate lobortis urna quis condimentum. Ut sit amet sodales metus, eu eleifend arcu. In sed porta elit. Duis sit amet dictum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed commodo vitae magna eu consectetur. Vivamus faucibus vehicula dignissim. Aliquam vitae mauris lacinia, sodales ante eu, faucibus leo. Suspendisse vel sodales lacus. Aliquam erat volutpat.\n\nMaecenas molestie neque vel purus aliquam, vitae pharetra purus molestie. Fusce sit amet odio condimentum, bibendum velit scelerisque, placerat lorem. Aenean vestibulum lacus sit amet lectus sagittis consequat. Suspendisse est ante, dignissim eget lectus ac, dapibus ornare purus. Proin porta pharetra ipsum, eu eleifend erat consectetur pretium. Nullam sodales nisi non metus volutpat, luctus blandit tellus iaculis. Quisque eleifend erat orci, ac elementum nunc consectetur at. Vestibulum cursus aliquet fermentum. Ut fringilla ligula sed quam pharetra, sed congue metus euismod.\n\nQuisque vulputate in velit vel volutpat. Fusce sollicitudin sed risus et volutpat. Aliquam eget nisi vel risus tempor iaculis. In lobortis consectetur ipsum, sed consectetur mi eleifend a. Maecenas egestas erat quis gravida tristique. In hac habitasse platea dictumst. Cras sollicitudin non augue volutpat ultricies. Mauris finibus urna velit, a egestas tellus finibus ut. Nam a tortor et ligula vestibulum consectetur sit amet ac mi. Nulla consectetur diam vitae elit tristique fringilla. Duis eget magna mauris.\n\nInteger ut ipsum eu tortor mollis accumsan nec vitae ex. Proin convallis, eros et viverra fringilla, orci purus ultricies lectus, rutrum ultrices odio nibh non odio. Quisque imperdiet elit eu suscipit suscipit. Pellentesque suscipit ex sed mattis imperdiet. Vivamus egestas tristique nisl non ornare. Duis fringilla maximus venenatis. Proin porttitor eget quam sit amet volutpat. Nulla arcu purus, lacinia id volutpat ut, tincidunt sed purus. Donec ullamcorper id lacus in placerat. Pellentesque a tortor ut mauris egestas pulvinar. Mauris laoreet sem augue, eget auctor erat semper gravida. Nulla et lectus mi. Etiam sagittis libero at lobortis tincidunt. Suspendisse sem ligula, auctor eu lacinia id, pharetra sit amet lacus. Fusce quis arcu vestibulum, pulvinar neque ultricies, gravida justo.'
           ];
+
+          return values_.map(item => window.AmauiHuffmanCode.encodeValues(new window.AmauiHuffmanCode(item).response.values));
         });
-        const valueNode = [
-          AmauiHuffmanCode.encodeValues(new AmauiHuffmanCode.AmauiHuffmanTree().make([])),
-          AmauiHuffmanCode.encodeValues(new AmauiHuffmanCode.AmauiHuffmanTree().make([
-            [' '],
-          ])),
-          AmauiHuffmanCode.encodeValues(new AmauiHuffmanCode.AmauiHuffmanTree().make([
-            ['a'],
-          ])),
-          AmauiHuffmanCode.encodeValues(new AmauiHuffmanCode.AmauiHuffmanTree().make([
-            '0', '0', ['e'], '1', ['o', 'n'], '1', '0', ['u'], '1', ['d', 'c'], '1', ['r'], '1', '0', '0', ['g', 'b'], '1', ['1'], '1', ['v', 'D'], '1', '0', ['h'], '1', ['I', 'C'], '1', ['f'], '1', ['P', 'j'], '1', '0', '0', ['i', 't'], '1', ['s'], '1', ['l', 'm'], '1', [' '], '1', ['a'], '1', '0', ['p', '.'], '1', [','], '1', ['q'], '1', '0', ['0', 'L'], '1', ['F', 'S'],
-          ])),
-          AmauiHuffmanCode.encodeValues(new AmauiHuffmanCode.AmauiHuffmanTree().make(['0', '0', '0', ['t', 'u'], '1', ['i'], '1', ['o'], '1', ['.'], '1', ['q'], '1', ['f'], '1', ['\n'], '1', ['Q', 'x'], '1', [' '], '1', ['s'], '1', ['c'], '1', ['p'], '1', '0', '0', ['P', 'V'], '1', ['I', 'S'], '1', '0', ['M'], '1', ['F', 'E'], '1', '0', ['C', 'U'], '1', ['D', 'A'], '1', '0', ['e'], '1', ['r', 'n'], '1', '0', ['l'], '1', ['d'], '1', ['g', ','], '1', ['a'], '1', ['m'], '1', ['v'], '1', ['b'], '1', ['h'], '1', ['N'], '1', ['j', 'L']
-          ])),
+
+        const values_ = [
+          '',
+          '4',
+          ' ',
+          '  ',
+          'a',
+          'Lorem 11101 ipsum dolor sit amet, consectetur adipiscing elit. Fusce dolor sem, facilisis sed erat sit amet, pharetra blandit augue. Sed id placerat felis, malesuada rutrum nisl. In ultrices sed mauris finibus malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer cursus, odio id rutrum blandit, neque velit aliquam odio, at rhoncus elit est nec erat. Proin egestas mauris elit, sit amet molestie nisi semper at. Cras interdum massa nec molestie rutrum. Duis commodo venenatis justo, ac porta tellus pellentesque sed. Donec et nisi aumus.',
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tincidunt justo sit amet mi ornare volutpat. Praesent consequat mauris id massa vehicula, ac molestie dolor tincidunt. Fusce neque dolor, commodo nec justo nec, commodo euismod erat. Vivamus at tincidunt massa, nec tempor ante. In suscipit nisl nec faucibus gravida. In non commodo erat, eu luctus ligula. Sed purus justo, congue in congue eget, placerat scelerisque velit. Sed vel arcu risus. Vivamus auctor quis erat a porta.\n\nMauris vel dui at lectus tincidunt finibus id ut massa. Phasellus in velit elit. Etiam eu dapibus lorem. Maecenas at tincidunt urna. Cras vulputate lobortis urna quis condimentum. Ut sit amet sodales metus, eu eleifend arcu. In sed porta elit. Duis sit amet dictum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed commodo vitae magna eu consectetur. Vivamus faucibus vehicula dignissim. Aliquam vitae mauris lacinia, sodales ante eu, faucibus leo. Suspendisse vel sodales lacus. Aliquam erat volutpat.\n\nMaecenas molestie neque vel purus aliquam, vitae pharetra purus molestie. Fusce sit amet odio condimentum, bibendum velit scelerisque, placerat lorem. Aenean vestibulum lacus sit amet lectus sagittis consequat. Suspendisse est ante, dignissim eget lectus ac, dapibus ornare purus. Proin porta pharetra ipsum, eu eleifend erat consectetur pretium. Nullam sodales nisi non metus volutpat, luctus blandit tellus iaculis. Quisque eleifend erat orci, ac elementum nunc consectetur at. Vestibulum cursus aliquet fermentum. Ut fringilla ligula sed quam pharetra, sed congue metus euismod.\n\nQuisque vulputate in velit vel volutpat. Fusce sollicitudin sed risus et volutpat. Aliquam eget nisi vel risus tempor iaculis. In lobortis consectetur ipsum, sed consectetur mi eleifend a. Maecenas egestas erat quis gravida tristique. In hac habitasse platea dictumst. Cras sollicitudin non augue volutpat ultricies. Mauris finibus urna velit, a egestas tellus finibus ut. Nam a tortor et ligula vestibulum consectetur sit amet ac mi. Nulla consectetur diam vitae elit tristique fringilla. Duis eget magna mauris.\n\nInteger ut ipsum eu tortor mollis accumsan nec vitae ex. Proin convallis, eros et viverra fringilla, orci purus ultricies lectus, rutrum ultrices odio nibh non odio. Quisque imperdiet elit eu suscipit suscipit. Pellentesque suscipit ex sed mattis imperdiet. Vivamus egestas tristique nisl non ornare. Duis fringilla maximus venenatis. Proin porttitor eget quam sit amet volutpat. Nulla arcu purus, lacinia id volutpat ut, tincidunt sed purus. Donec ullamcorper id lacus in placerat. Pellentesque a tortor ut mauris egestas pulvinar. Mauris laoreet sem augue, eget auctor erat semper gravida. Nulla et lectus mi. Etiam sagittis libero at lobortis tincidunt. Suspendisse sem ligula, auctor eu lacinia id, pharetra sit amet lacus. Fusce quis arcu vestibulum, pulvinar neque ultricies, gravida justo.'
         ];
+
+        const valueNode = values_.map(item => AmauiHuffmanCode.encodeValues(new AmauiHuffmanCode(item).response.values));
+
         const values = [valueNode, ...valueBrowsers];
 
         values.forEach(value => assert(value).eql([
-          '0',
-          '1 ',
-          '1a',
-          '000 e 1 on 2 u 1 dc 1 r 4 gb 1 1 1 vD 2 h 1 IC 1 f 1 Pj 4 it 1 s 1 lm 1   1 a 2 p. 1 , 1 q 2 0L 1 FS',
-          '0000 tu 1 i 1 o 1 . 1 q 1 f 1 \n 1 Qx 1   1 s 1 c 1 p 4 PV 1 IS 2 M 1 FE 2 CU 1 DA 2 e 1 rn 2 l 1 d 1 g, 1 a 1 m 1 v 1 b 1 h 1 N 1 jL',
+          undefined,
+          "4\u0000\u0002\u0002",
+          " \u0000\u0002\u0002",
+          " \u0000\u0002\u0002",
+          "a\u0000\u0002\u0002",
+          "0\u0000\u0000ÿ\f 1\u0000\u0002½\u0002 e\u0000\u0000\b o\u0000\u0002 n\u0000\u0002 u\u0000\u0002¢ d\u0000\u0002¦ c\u0000\u0002§ r\u0000\u0002² g\u0000\u0002¼\u0002 b\u0000\u0002¼\u0003 v\u0000\u0002½\u0006 D\u0000\u0002½\u0007 h\u0000\u0002¾\u0002 I\u0000\u0002¾\u0006 C\u0000\u0002¾\u0007 f\u0000\u0002¿\u0002 P\u0000\u0002¿\u0006 j\u0000\u0002¿\u0007 i\u0000\u0002Â t\u0000\u0002Ã s\u0000\u0002Ò l\u0000\u0002Ö m\u0000\u0002×  \u0000\u0000\u000e a\u0000\u0002ò p\u0000\u0000ü .\u0000\u0000ý ,\u0000\u0000þ q\u0000\u0002ÿ\u0002 L\u0000\u0000ÿ\r F\u0000\u0000ÿ\u000e S\u0000\u0000ÿ\u000f",
+          "t\u0000\u0002 u\u0000\u0002 i\u0000\u0002 o\u0000\u0002 .\u0000\u0000 q\u0000\u0002\u0002 f\u0000\u0002\u0006 \n\u0000\u0000\u000e Q\u0000\u0002ò x\u0000\u0002ó  \u0000\u0000\n s\u0000\u0002² c\u0000\u0002¶ p\u0000\u0000¾ P\u0000\u0000¿\b V\u0000\u0000¿\t I\u0000\u0000¿\n S\u0000\u0000¿\u000b M\u0000\u0000¿\f F\u0000\u0002¿Ò E\u0000\u0002¿Ó C\u0000\u0002¿â U\u0000\u0002¿ã D\u0000\u0002¿ò A\u0000\u0002¿ó e\u0000\u0000\f r\u0000\u0002Ò n\u0000\u0002Ó l\u0000\u0002â d\u0000\u0002æ g\u0000\u0000î ,\u0000\u0000ï a\u0000\u0002ò m\u0000\u0002ö v\u0000\u0000þ b\u0000\u0002ÿ\u0002 h\u0000\u0002ÿ\u0006 N\u0000\u0000ÿ\u000e j\u0000\u0002ÿò L\u0000\u0002ÿó"
         ]));
       });
 
       to('decodeValues', async () => {
         const valueBrowsers = await evaluate((window: any) => {
-          return [
-            window.AmauiHuffmanCode.decodeValues('0'),
-            window.AmauiHuffmanCode.decodeValues('1 '),
-            window.AmauiHuffmanCode.decodeValues('1a'),
-            window.AmauiHuffmanCode.decodeValues('000 e 1 on 2 u 1 dc 1 r 4 gb 1 1 1 vD 2 h 1 IC 1 f 1 Pj 4 it 1 s 1 lm 1   1 a 2 p. 1 , 1 q 2 0L 1 FS'),
-            window.AmauiHuffmanCode.decodeValues('0000 tu 1 i 1 o 1 . 1 q 1 f 1 \n 1 Qx 1   1 s 1 c 1 p 4 PV 1 IS 2 M 1 FE 2 CU 1 DA 2 e 1 rn 2 l 1 d 1 g, 1 a 1 m 1 v 1 b 1 h 1 N 1 jL'),
-            window.AmauiHuffmanCode.decodeValues('14 '),
-            window.AmauiHuffmanCode.decodeValues('1 4'),
+          const values_ = [
+            undefined,
+            "4\u0000\u0002\u0002",
+            " \u0000\u0002\u0002",
+            " \u0000\u0002\u0002",
+            "a\u0000\u0002\u0002",
+            "0\u0000\u0000ÿ\f 1\u0000\u0002½\u0002 e\u0000\u0000\b o\u0000\u0002 n\u0000\u0002 u\u0000\u0002¢ d\u0000\u0002¦ c\u0000\u0002§ r\u0000\u0002² g\u0000\u0002¼\u0002 b\u0000\u0002¼\u0003 v\u0000\u0002½\u0006 D\u0000\u0002½\u0007 h\u0000\u0002¾\u0002 I\u0000\u0002¾\u0006 C\u0000\u0002¾\u0007 f\u0000\u0002¿\u0002 P\u0000\u0002¿\u0006 j\u0000\u0002¿\u0007 i\u0000\u0002Â t\u0000\u0002Ã s\u0000\u0002Ò l\u0000\u0002Ö m\u0000\u0002×  \u0000\u0000\u000e a\u0000\u0002ò p\u0000\u0000ü .\u0000\u0000ý ,\u0000\u0000þ q\u0000\u0002ÿ\u0002 L\u0000\u0000ÿ\r F\u0000\u0000ÿ\u000e S\u0000\u0000ÿ\u000f",
+            "t\u0000\u0002 u\u0000\u0002 i\u0000\u0002 o\u0000\u0002 .\u0000\u0000 q\u0000\u0002\u0002 f\u0000\u0002\u0006 \n\u0000\u0000\u000e Q\u0000\u0002ò x\u0000\u0002ó  \u0000\u0000\n s\u0000\u0002² c\u0000\u0002¶ p\u0000\u0000¾ P\u0000\u0000¿\b V\u0000\u0000¿\t I\u0000\u0000¿\n S\u0000\u0000¿\u000b M\u0000\u0000¿\f F\u0000\u0002¿Ò E\u0000\u0002¿Ó C\u0000\u0002¿â U\u0000\u0002¿ã D\u0000\u0002¿ò A\u0000\u0002¿ó e\u0000\u0000\f r\u0000\u0002Ò n\u0000\u0002Ó l\u0000\u0002â d\u0000\u0002æ g\u0000\u0000î ,\u0000\u0000ï a\u0000\u0002ò m\u0000\u0002ö v\u0000\u0000þ b\u0000\u0002ÿ\u0002 h\u0000\u0002ÿ\u0006 N\u0000\u0000ÿ\u000e j\u0000\u0002ÿò L\u0000\u0002ÿó"
           ];
+
+          return values_.map(item => window.AmauiHuffmanCode.decodeValues(item));
         });
-        const valueNode = [
-          AmauiHuffmanCode.decodeValues('0'),
-          AmauiHuffmanCode.decodeValues('1 '),
-          AmauiHuffmanCode.decodeValues('1a'),
-          AmauiHuffmanCode.decodeValues('000 e 1 on 2 u 1 dc 1 r 4 gb 1 1 1 vD 2 h 1 IC 1 f 1 Pj 4 it 1 s 1 lm 1   1 a 2 p. 1 , 1 q 2 0L 1 FS'),
-          AmauiHuffmanCode.decodeValues('0000 tu 1 i 1 o 1 . 1 q 1 f 1 \n 1 Qx 1   1 s 1 c 1 p 4 PV 1 IS 2 M 1 FE 2 CU 1 DA 2 e 1 rn 2 l 1 d 1 g, 1 a 1 m 1 v 1 b 1 h 1 N 1 jL'),
-          AmauiHuffmanCode.decodeValues('14 '),
-          AmauiHuffmanCode.decodeValues('1 4'),
+
+        const values_ = [
+          undefined,
+          "4\u0000\u0002\u0002",
+          " \u0000\u0002\u0002",
+          " \u0000\u0002\u0002",
+          "a\u0000\u0002\u0002",
+          "0\u0000\u0000ÿ\f 1\u0000\u0002½\u0002 e\u0000\u0000\b o\u0000\u0002 n\u0000\u0002 u\u0000\u0002¢ d\u0000\u0002¦ c\u0000\u0002§ r\u0000\u0002² g\u0000\u0002¼\u0002 b\u0000\u0002¼\u0003 v\u0000\u0002½\u0006 D\u0000\u0002½\u0007 h\u0000\u0002¾\u0002 I\u0000\u0002¾\u0006 C\u0000\u0002¾\u0007 f\u0000\u0002¿\u0002 P\u0000\u0002¿\u0006 j\u0000\u0002¿\u0007 i\u0000\u0002Â t\u0000\u0002Ã s\u0000\u0002Ò l\u0000\u0002Ö m\u0000\u0002×  \u0000\u0000\u000e a\u0000\u0002ò p\u0000\u0000ü .\u0000\u0000ý ,\u0000\u0000þ q\u0000\u0002ÿ\u0002 L\u0000\u0000ÿ\r F\u0000\u0000ÿ\u000e S\u0000\u0000ÿ\u000f",
+          "t\u0000\u0002 u\u0000\u0002 i\u0000\u0002 o\u0000\u0002 .\u0000\u0000 q\u0000\u0002\u0002 f\u0000\u0002\u0006 \n\u0000\u0000\u000e Q\u0000\u0002ò x\u0000\u0002ó  \u0000\u0000\n s\u0000\u0002² c\u0000\u0002¶ p\u0000\u0000¾ P\u0000\u0000¿\b V\u0000\u0000¿\t I\u0000\u0000¿\n S\u0000\u0000¿\u000b M\u0000\u0000¿\f F\u0000\u0002¿Ò E\u0000\u0002¿Ó C\u0000\u0002¿â U\u0000\u0002¿ã D\u0000\u0002¿ò A\u0000\u0002¿ó e\u0000\u0000\f r\u0000\u0002Ò n\u0000\u0002Ó l\u0000\u0002â d\u0000\u0002æ g\u0000\u0000î ,\u0000\u0000ï a\u0000\u0002ò m\u0000\u0002ö v\u0000\u0000þ b\u0000\u0002ÿ\u0002 h\u0000\u0002ÿ\u0006 N\u0000\u0000ÿ\u000e j\u0000\u0002ÿò L\u0000\u0002ÿó"
         ];
+
+        const valueNode = values_.map(item => AmauiHuffmanCode.decodeValues(item));
+
         const values = [valueNode, ...valueBrowsers];
 
         values.forEach(value => assert(value).eql([
           {},
-          { ' ': '0' },
-          { a: '0' },
           {
-            0: '111111100',
-            1: '0111010',
-            e: '000',
-            o: '0010',
-            n: '0011',
-            u: '0100',
-            d: '01010',
-            c: '01011',
-            r: '0110',
-            g: '0111000',
-            b: '0111001',
-            v: '01110110',
-            D: '01110111',
-            h: '0111100',
-            I: '01111010',
-            C: '01111011',
-            f: '0111110',
-            P: '01111110',
-            j: '01111111',
-            i: '1000',
-            t: '1001',
-            s: '1010',
-            l: '10110',
-            m: '10111',
-            ' ': '110',
-            a: '1110',
-            p: '111100',
-            '.': '111101',
-            ',': '111110',
-            q: '1111110',
-            L: '111111101',
-            F: '111111110',
-            S: '111111111'
+            "4": "0"
           },
           {
-            t: '0000',
-            u: '0001',
-            i: '0010',
-            o: '00110',
-            '.': '001110',
-            q: '0011110',
-            f: '00111110',
-            '\n': '001111110',
-            Q: '0011111110',
-            x: '0011111111',
-            ' ': '010',
-            s: '0110',
-            c: '01110',
-            p: '011110',
-            P: '011111000',
-            V: '011111001',
-            I: '011111010',
-            S: '011111011',
-            M: '011111100',
-            F: '0111111010',
-            E: '0111111011',
-            C: '0111111100',
-            U: '0111111101',
-            D: '0111111110',
-            A: '0111111111',
-            e: '100',
-            r: '1010',
-            n: '1011',
-            l: '1100',
-            d: '11010',
-            g: '110110',
-            ',': '110111',
-            a: '1110',
-            m: '11110',
-            v: '111110',
-            b: '1111110',
-            h: '11111110',
-            N: '111111110',
-            j: '1111111110',
-            L: '1111111111'
+            " ": "0"
           },
           {
-            4: '0',
-            ' ': '1'
+            " ": "0"
           },
           {
-            4: '1',
-            ' ': '0'
+            "a": "0"
+          },
+          {
+            "0": "111111100",
+            "1": "0111010",
+            "e": "000",
+            "o": "0010",
+            "n": "0011",
+            "u": "0100",
+            "d": "01010",
+            "c": "01011",
+            "r": "0110",
+            "g": "0111000",
+            "b": "0111001",
+            "v": "01110110",
+            "D": "01110111",
+            "h": "0111100",
+            "I": "01111010",
+            "C": "01111011",
+            "f": "0111110",
+            "P": "01111110",
+            "j": "01111111",
+            "i": "1000",
+            "t": "1001",
+            "s": "1010",
+            "l": "10110",
+            "m": "10111",
+            " ": "110",
+            "a": "1110",
+            "p": "111100",
+            ".": "111101",
+            ",": "111110",
+            "q": "1111110",
+            "L": "111111101",
+            "F": "111111110",
+            "S": "111111111"
+          },
+          {
+            "t": "0000",
+            "u": "0001",
+            "i": "0010",
+            "o": "00110",
+            ".": "001110",
+            "q": "0011110",
+            "f": "00111110",
+            "\n": "001111110",
+            "Q": "0011111110",
+            "x": "0011111111",
+            " ": "010",
+            "s": "0110",
+            "c": "01110",
+            "p": "011110",
+            "P": "011111000",
+            "V": "011111001",
+            "I": "011111010",
+            "S": "011111011",
+            "M": "011111100",
+            "F": "0111111010",
+            "E": "0111111011",
+            "C": "0111111100",
+            "U": "0111111101",
+            "D": "0111111110",
+            "A": "0111111111",
+            "e": "100",
+            "r": "1010",
+            "n": "1011",
+            "l": "1100",
+            "d": "11010",
+            "g": "110110",
+            ",": "110111",
+            "a": "1110",
+            "m": "11110",
+            "v": "111110",
+            "b": "1111110",
+            "h": "11111110",
+            "N": "111111110",
+            "j": "1111111110",
+            "L": "1111111111"
           }
         ]));
       });
