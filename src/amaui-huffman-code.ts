@@ -217,7 +217,7 @@ class AmauiHuffmanCode {
     return (hexadecimalStringToBinary(value).match(/.{1,4}/g) || []).map(item => item.slice(1)).join('');
   }
 
-  public static encodeValues(values: Record<string, string>, encodeValues: boolean): string | object {
+  public static encodeValues(values: Record<string, string>, encodeValues: boolean = true): string | object {
     if (values) {
       let result = '';
 
