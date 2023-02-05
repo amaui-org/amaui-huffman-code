@@ -234,9 +234,9 @@ class AmauiHuffmanCode {
 
     const values = [];
 
-    const encodeValues = value[0] === '1';
-
     if (value) {
+      const encodeValues = value[0] === '1';
+
       const values_ = value.slice(1).split(' ');
 
       values_.forEach((item, index) => {
