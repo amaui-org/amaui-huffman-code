@@ -173,10 +173,12 @@ export class AmauiHuffmanTree implements IAmauiHuffmanTree {
 export type TEncoding = 'binary' | 'hexadecimal';
 
 export interface IOptions {
+  encode_values?: boolean;
   base64?: boolean;
 }
 
 export const optionsDefault: IOptions = {
+  encode_values: true,
   base64: true,
 };
 
@@ -215,15 +217,15 @@ class AmauiHuffmanCode {
     return (hexadecimalStringToBinary(value).match(/.{1,4}/g) || []).map(item => item.slice(1)).join('');
   }
 
-  public static encodeValues(values: Record<string, string>): string | object {
+  public static encodeValues(values: Record<string, string>, encodeValues: boolean): string | object {
     if (values) {
       let result = '';
 
       const keys = Object.keys(values);
 
-      keys.forEach((item, index) => result += `${item}${this.encodeValue(values[item])}${index < keys.length - 1 ? ' ' : ''}`);
+      keys.forEach((item, index) => result += `${item}${encodeValues ? this.encodeValue(values[item]) : values[item]}${index < keys.length - 1 ? ' ' : ''}`);
 
-      return result;
+      return `${encodeValues ? 1 : 0}${result}`;
     }
   }
 
@@ -232,15 +234,17 @@ class AmauiHuffmanCode {
 
     const values = [];
 
+    const encodeValues = value[0] === '1';
+
     if (value) {
-      const values_ = value.split(' ');
+      const values_ = value.slice(1).split(' ');
 
       values_.forEach((item, index) => {
         if (!item) values_[index + 1] = ` ${values_[index + 1]}`;
         else values.push(item);
       });
 
-      values.forEach(item => result[item[0]] = this.decodeValue(item.slice(1)));
+      values.forEach(item => result[item[0]] = encodeValues ? this.decodeValue(item.slice(1)) : item.slice(1));
     }
 
     return result;
@@ -363,7 +367,7 @@ class AmauiHuffmanCode {
       response.performance_milliseconds = AmauiDate.milliseconds - this.startTime;
       response.performance = duration(response.performance_milliseconds) || '0 milliseconds';
       response.values = this.values;
-      response.values_encoded = AmauiHuffmanCode.encodeValues(this.values);
+      response.values_encoded = AmauiHuffmanCode.encodeValues(this.values, this.options.encode_values);
       response.probabilities = this.probabilities;
       response.efficiency = this.efficiency;
       response.redundency = this.redundency;
