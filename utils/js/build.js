@@ -2,6 +2,7 @@ const path = require('path');
 const childProcess = require('child_process');
 const yargs = require('yargs');
 const fse = require('fs-extra');
+const fg = require('fast-glob');
 
 const { promisify } = require('@amaui/utils');
 
@@ -235,6 +236,109 @@ async function types() {
   if (log) console.log(`🌱 Types done\n`);
 }
 
+const capitalizeCammelCase = value => typeof value === 'string' ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+
+const kebabCasetoCammelCase = value => typeof value === 'string' ? value.replace(/-./g, v => v[1] !== undefined ? v[1].toUpperCase() : '') : value;
+
+const capitalizedCammelCase = value => capitalizeCammelCase(kebabCasetoCammelCase(value));
+
+async function docsUpdateTypes(pathTypes, pathUse, isModules) {
+  let data = await fse.readFile(pathTypes, 'utf8');
+
+  data = data.split('\n')
+    .filter(Boolean)
+    .filter(item => !['import'].some(value => item.indexOf(value) === 0))
+    .map(item => {
+      let value = item;
+
+      if (item.startsWith('declare ')) value = value.slice(8);
+
+      if (item.startsWith('export ')) value = value.slice(7);
+
+      return value;
+    })
+    .join('\n');
+
+  let name = (path.parse(pathTypes).name).replace('.d', '').replace(/[\(\):]/gi, '');
+
+  name = name.includes('-') ? capitalizedCammelCase(name) : name;
+
+  const usePath = `${pathUse}${!isModules ? '.md' : `/${name}.md`}`;
+
+  const use = fse.existsSync(usePath) ? await fse.readFile(usePath, 'utf8') : '';
+
+  let values = use?.trim().match(/(?!^|}~)[^~]+(?!$|~{)/ig) || [];
+
+  const parts = data.match(/((type|const) [^{|\n]+{\n[^}]+};)|((type|const|function|default function) [^\n]+)|((interface|class|default class) [^}]+};?(\n|$))/ig) || [];
+
+  let valueNew = `\n\n### API\n\n`;
+
+  parts.forEach(part => {
+    const partName = (part.replace('default ', '').match(/(?!type|interface|const|function|class) [^ \(\)\{\}\:]+/i) || [])[0]?.trim();
+
+    valueNew += `#### ${partName}\n\n\`\`\`ts\n${part.trim()}\n\`\`\`\n\n`;
+  });
+
+  // Update values value
+  values = values.map(item => {
+    if (item.includes('# API')) return valueNew;
+
+    return item;
+  });
+
+  if (!values.length) values.push(valueNew);
+
+  // Update the file or create it if it doesn't exist
+  await fse.writeFile(usePath, values.join('\n'));
+}
+
+async function docs() {
+  const { log } = cache;
+
+  if (log) console.log(`🌱 Starting docs`);
+
+  // Find the build folder
+  // and go to all levels, and find .d.ts files that are not index.d.ts
+  // and all nested folders if there are any as modules
+  const paths = {
+    build: path.resolve('build')
+  };
+
+  let files = [];
+
+  // Files
+  const folders = (await fg(path.join(path.resolve('build'), '/**'), { onlyDirectories: true, deep: 1 })).filter(item => ['esm', 'umd'].every(item_ => item.indexOf(item_) === -1));
+
+  const isModules = !!folders.length;
+
+  if (isModules) {
+    for (const folder of folders) {
+      const filesFolder = (await fg(path.join(folder, '*.d.ts'))).filter(item => !item.includes('index.d.ts'));
+
+      files.push(...filesFolder);
+    }
+  }
+
+  files.push(...(await fg(path.join(paths.build, '*.d.ts'))).filter(item => !item.includes('index.d.ts')));
+
+  // For each file find the appropriate use file
+  // in docs public, and replace the api
+  // with the new value
+  paths.md = path.resolve(wd, '../amaui/docs/public/assets/md/dev', moduleFolder.replace('amaui-', ''));
+
+  paths.use = path.join(paths.md, 'use');
+
+  const use = fse.existsSync(paths.use);
+
+  if (files.length > 1) {
+    if (!use) fse.mkdirSync(paths.use);
+  }
+
+  await Promise.all(files.map(item => docsUpdateTypes(item, paths.use, files.length > 1)));
+
+  if (log) console.log(`🌱 Done docs`);
+}
+
 async function run(argv) {
   // Use argvs in methods
   Object.assign(cache, argv);
@@ -250,6 +354,9 @@ async function run(argv) {
 
   // Types
   await types();
+
+  // Docs
+  if (argv.types) await docs();
 }
 
 yargs
@@ -259,6 +366,7 @@ yargs
     builder: command => command
       .option('out-path', { alias: 'o', default: './build', type: 'string' })
       .option('log', { alias: 'l', type: 'boolean' })
+      .option('types', { alias: 't', type: 'boolean' })
     ,
     handler: run,
   })
