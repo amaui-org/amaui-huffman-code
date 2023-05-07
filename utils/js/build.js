@@ -269,24 +269,49 @@ async function docsUpdateTypes(pathTypes, pathUse, isModules) {
 
   let values = use?.trim().match(/(?!^|}~)[^~]+(?!$|~{)/ig) || [];
 
+  if (values[0]?.startsWith('#')) values[0] = `#${values[0]}`;
+
+  if (values[values.length - 1]?.endsWith('\n``')) values[values.length - 1] = values[values.length - 1] + '`';
+
+  if (values.length > 0 && values.length <= 2) {
+    const md = (values[0].split(/### API[^~]+(?!$|~])/))[0]?.trim();
+    const api = values[0].match(/### API[^~]+(?!$|~])/)[0]?.trim();
+
+    values.splice(0, 1, md, api);
+
+    values = values.filter(Boolean);
+  }
+
   const parts = data.match(/((type|const) [^{|\n]+{\n[^}]+};)|((type|const|function|default function) [^\n]+)|((interface|class|default class) [^}]+};?(\n|$))/ig) || [];
 
   let valueNew = `\n\n### API\n\n`;
 
   parts.forEach(part => {
-    const partName = (part.replace('default ', '').match(/(?!type|interface|const|function|class) [^ \(\)\{\}\:]+/i) || [])[0]?.trim();
+    const partName = (part.replace('default ', '').match(/(?!type|interface|const|function|class) [^ \(\)\{\}\<\:]+/i) || [])[0]?.trim();
 
     valueNew += `#### ${partName}\n\n\`\`\`ts\n${part.trim()}\n\`\`\`\n\n`;
   });
 
   // Update values value
+  let added = false;
+
   values = values.map(item => {
-    if (item.includes('# API')) return valueNew;
+    if (item.includes('# API')) {
+      added = true;
+
+      return valueNew;
+    }
 
     return item;
   });
 
-  if (!values.length) values.push(valueNew);
+  if (!added) values.push(valueNew);
+
+  values = values.map(item => {
+    if (item.startsWith('{')) return `~${item}~`;
+
+    return item;
+  });
 
   // Update the file or create it if it doesn't exist
   await fse.writeFile(usePath, values.join('\n'));
