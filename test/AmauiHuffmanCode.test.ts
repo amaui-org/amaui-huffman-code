@@ -5,7 +5,7 @@ import { evaluate } from '../utils/js/test/utils';
 
 import AmauiHuffmanCode from '../src';
 
-group('@amaui/huffman-code', () => {
+group('AmauiHuffmanCode', () => {
 
   to('AmauiHuffmanCodeResponse', async () => {
     const value = new AmauiHuffmanCode.AmauiHuffmanCodeResponse(

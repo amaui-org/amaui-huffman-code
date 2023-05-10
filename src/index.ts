@@ -1,1 +1,1 @@
-export { default } from './amaui-huffman-code';
+export { default } from './AmauiHuffmanCode';
