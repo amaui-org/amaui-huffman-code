@@ -242,14 +242,26 @@ const kebabCasetoCammelCase = value => typeof value === 'string' ? value.replace
 
 const capitalizedCammelCase = value => capitalizeCammelCase(kebabCasetoCammelCase(value));
 
-async function docsUpdateTypes(pathTypes, pathUse, isModules) {
+async function docsUpdateTypes(pathTypes, pathUse, isModules, options = {}) {
+  const {
+    previous,
+    next
+  } = options;
+
   let data = await fse.readFile(pathTypes, 'utf8');
 
-  let name = (path.parse(pathTypes).name).replace('.d', '').replace(/[\(\):]/gi, '');
+  const getName = pathValue => pathValue ? (path.parse(pathValue).name).replace('.d', '').replace(/[\(\):]/gi, '') : '';
 
-  name = name.includes('-') ? capitalizedCammelCase(name) : name;
+  const names = {
+    previous: getName(previous),
+    path: getName(pathTypes),
+    next: getName(next),
+    lib: moduleFolder.replace('amaui-', '').replace(/[-_]/gi, ' ')
+  };
 
-  const usePath = `${pathUse}${!isModules ? '.md' : `/${name}.md`}`;
+  if (names.path.includes('-')) names.path = capitalizedCammelCase(names.path);
+
+  const usePath = `${pathUse}${!isModules ? '.md' : `/${names.path}.md`}`;
 
   const use = fse.existsSync(usePath) ? await fse.readFile(usePath, 'utf8') : '';
 
@@ -268,6 +280,7 @@ async function docsUpdateTypes(pathTypes, pathUse, isModules) {
     values = values.filter(Boolean);
   }
 
+  // API
   let parts = [];
 
   data.split('\n').forEach(item => {
@@ -277,11 +290,12 @@ async function docsUpdateTypes(pathTypes, pathUse, isModules) {
 
   parts = parts
     .filter(Boolean)
-    .map(item => item.replace(/(export|declare) /g, ''))
+    .map(item => item.replace(/(export|declare) /g, '').replace(/`/gi, `'`))
     .filter(item => {
       const partName = (item.replace('default ', '').match(/(?!default|type|interface|const|function|class) [^ \(\)\{\}\<\:]+/i) || [])[0]?.trim();
 
       return (
+        !item.includes(`/// <reference`) &&
         !item.startsWith('import') &&
         !!partName
       );
@@ -309,6 +323,44 @@ async function docsUpdateTypes(pathTypes, pathUse, isModules) {
   });
 
   if (!added) values.push(valueNew);
+
+  // BottomNavigation
+  // Add bottom navigation if it doesn't exist
+  if (!values.find(item => item.startsWith('{\n') && item.endsWith('}'))) {
+    values.push('{\n  "element": "BottomNavigation",\n  "props": {\n    "previous": {\n      "label": "AMQP: Start",\n      "to": "/dev/amqp/start"\n    },\n    "next": {\n      "label": "API: Use",\n      "to": "/dev/api/use"\n    }\n  }\n}');
+  }
+
+  values = values.map(item => {
+    // BottomNavigation
+    if (item.startsWith('{\n') && item.endsWith('}')) {
+      const object = JSON.parse(item);
+
+      // Previous
+      if (!names.previous) {
+        object.props.previous.label = `${capitalize(names.lib)}: Start`;
+        object.props.previous.to = `/dev/${names.lib}/start`;
+      }
+      else {
+        object.props.previous.label = `${capitalize(names.lib)}: ${names.previous}`;
+        object.props.previous.to = `/dev/${names.lib}/use${isModules ? `/${names.previous}` : ''}`;
+      }
+
+      // Next
+      if (!names.next) {
+        object.props.next.label = `${capitalize(names.lib)}: Start`;
+        object.props.next.to = `/dev/${names.lib}/start`;
+
+      }
+      else {
+        object.props.next.label = `${capitalize(names.lib)}: ${names.next}`;
+        object.props.next.to = `/dev/${names.lib}/use${isModules ? `/${names.next}` : ''}`;
+      }
+
+      return JSON.stringify(object, null, 2);
+    }
+
+    return item;
+  });
 
   values = values.map(item => {
     if (item.startsWith('{')) return `~${item}~`;
@@ -352,17 +404,20 @@ async function docs() {
   // For each file find the appropriate use file
   // in docs public, and replace the api
   // with the new value
-  paths.md = path.resolve(wd, '../amaui/docs/public/assets/md/dev', moduleFolder.replace('amaui-', ''));
+  paths.md = path.resolve(wd, '../../docs/public/assets/md/dev', moduleFolder.replace('amaui-', ''));
 
   paths.use = path.join(paths.md, 'use');
 
   const use = fse.existsSync(paths.use);
 
-  if (files.length > 1) {
+  if (isModules) {
     if (!use) fse.mkdirSync(paths.use);
   }
 
-  await Promise.all(files.map(item => docsUpdateTypes(item, paths.use, files.length > 1)));
+  await Promise.all(files.map((item, index) => docsUpdateTypes(item, paths.use, isModules, {
+    previous: files[index - 1],
+    next: files[index + 1]
+  })));
 
   if (log) console.log(`🌱 Done docs`);
 }
@@ -384,7 +439,7 @@ async function run(argv) {
   await types();
 
   // Docs
-  if (argv.types) await docs();
+  if (argv.docs) await docs();
 }
 
 yargs
@@ -394,7 +449,7 @@ yargs
     builder: command => command
       .option('out-path', { alias: 'o', default: './build', type: 'string' })
       .option('log', { alias: 'l', type: 'boolean' })
-      .option('types', { alias: 't', type: 'boolean' })
+      .option('docs', { alias: 'd', type: 'boolean' })
     ,
     handler: run,
   })
