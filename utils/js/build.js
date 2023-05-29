@@ -381,15 +381,18 @@ async function docs() {
   // and go to all levels, and find .d.ts files that are not index.d.ts
   // and all nested folders if there are any as modules
   const paths = {
-    build: path.resolve('build')
+    build: path.resolve('build'),
+    src: path.resolve('src')
   };
 
   let files = [];
 
   // Files
-  const folders = (await fg(path.join(path.resolve('build'), '/**'), { onlyDirectories: true, deep: 1 })).filter(item => ['esm', 'umd'].every(item_ => item.indexOf(item_) === -1));
+  const all = (await fg(path.join(paths.src, '/**'), { deep: 1 })).filter(item => !item.includes('index.ts'));
 
-  const isModules = !!folders.length;
+  const folders = (await fg(path.join(paths.build, '/**'), { onlyDirectories: true, deep: 1 })).filter(item => ['esm', 'umd'].every(item_ => item.indexOf(item_) === -1));
+
+  const isModules = all.length > 1;
 
   if (isModules) {
     for (const folder of folders) {
@@ -404,7 +407,7 @@ async function docs() {
   // For each file find the appropriate use file
   // in docs public, and replace the api
   // with the new value
-  paths.md = path.resolve(wd, '../../docs/public/assets/md/dev', moduleFolder.replace('amaui-', ''));
+  paths.md = path.resolve(wd, '../amaui/docs/public/assets/md/dev', moduleFolder.replace('amaui-', ''));
 
   paths.use = path.join(paths.md, 'use');
 

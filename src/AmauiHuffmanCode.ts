@@ -1,5 +1,4 @@
 import is from '@amaui/utils/is';
-import isValid from '@amaui/utils/isValid';
 import merge from '@amaui/utils/merge';
 import copy from '@amaui/utils/copy';
 import to from '@amaui/utils/to';
@@ -179,7 +178,7 @@ export interface IOptions {
 
 export const optionsDefault: IOptions = {
   encode_values: true,
-  base64: true,
+  base64: true
 };
 
 class AmauiHuffmanCode {
