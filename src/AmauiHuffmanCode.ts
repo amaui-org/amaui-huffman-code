@@ -4,7 +4,7 @@ import copy from '@amaui/utils/copy';
 import to from '@amaui/utils/to';
 import binaryStringToHexadecimal from '@amaui/utils/binaryStringToHexadecimal';
 import hexadecimalStringToBinary from '@amaui/utils/hexadecimalStringToBinary';
-import AmauiDate from '@amaui/date/amaui-date';
+import AmauiDate from '@amaui/date/AmauiDate';
 import duration from '@amaui/date/duration';
 import { TMethod } from '@amaui/models';
 
