@@ -1,6 +1,6 @@
 {
   "name": "@amaui/huffman-code",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Huffman code",
   "repository": "https://github.com/amaui-org/amaui-huffman-code.git",
   "author": "Lazar <lazareric2@gmail.com>",
@@ -51,8 +51,8 @@
     "test": "yarn lint && yarn type && yarn build && yarn test:pre && yarn cov && yarn test:post"
   },
   "dependencies": {
-    "@amaui/date": "^1.1.3",
-    "@amaui/utils": "^1.1.17",
+    "@amaui/date": "^1.1.11",
+    "@amaui/utils": "^1.1.18",
     "@babel/runtime": "^7.18.3"
   },
   "devDependencies": {
